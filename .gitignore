@@ -1,0 +1,7 @@
+output/
+*.parquet
+*.h5
+*.csv
+__pycache__/
+*.pyc
+.DS_Store
