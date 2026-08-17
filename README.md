@@ -14,11 +14,11 @@ Covers the full pipeline: **IBKR live data → signal generation → bar-level b
 
 | Metric | Value |
 |--------|-------|
-| OOS Sharpe (2022–2026) | **4.85** |
-| IS / OOS ratio | **1.34×** — no decay (opposite of overfitting) |
-| Annual return on $25k | **+$47,170 (+188%)** |
-| Max drawdown | -$7,379 (-29.5%) |
-| Win weeks | **64%** (253 / 397 active weeks) |
+| OOS Sharpe (2022–2026) | **2.23** — fully audited |
+| Bootstrap 95% CI | **[1.53, 2.89]** |
+| Annual P&L on $25k | **+$45,939** after commissions |
+| Max drawdown | -$5,633 (-9.2%) |
+| Win weeks | **66.5%** (all weeks, including zero-signal weeks) |
 | OOS years profitable | **5 / 5** (every year 2022–2026) |
 | Fill validity | **100%** (market orders, audited) |
 | Backtest period | April 2018 – June 2026 (8.1 years) |
@@ -29,11 +29,11 @@ Covers the full pipeline: **IBKR live data → signal generation → bar-level b
 
 | # | Strategy | Market | Signal Logic | Freq/yr | OOS Win Rate | OOS Sharpe |
 |---|----------|--------|-------------|---------|-------------|-----------|
-| 1 | Asymmetric ORB | ES + NQ | Opening range breakout + PDH/L confirmation | 18 | 59.5% | 3.55 |
-| 2 | MTF Scalp | ES | Rejection candle at D1/W1/MN/RND confluence | 127 | 44.8% | 2.03 |
-| 3 | Double Test at Level | ES | Two failed level tests → reversal | 65 | 39.9% | **4.65** |
-| 4 | Gap + ORB Alignment | ES + NQ | Gap direction confirms ORB breakout | 33 | 54.3% | 2.77 |
-| 5 | CL Prior-Week H/L | Crude Oil | Prior-week high/low breakout | 62 | 71.7% | **7.77** |
+| 1 | Asymmetric ORB | ES + NQ | Opening range breakout + PDH/L confirmation | 16 | 58.2% | 0.58 |
+| 2 | MTF Scalp | ES | Rejection candle at D1/W1/MN/RND confluence | 135 | 45.0% | 0.74 |
+| 3 | Double Test at Level | ES | Two failed level tests → reversal | 71 | 40.0% | **1.83** |
+| 4 | Gap + ORB Alignment | ES + NQ | Gap direction confirms ORB breakout | 23 | 53.1% | 0.31 |
+| 5 | CL Prior-Week H/L | Crude Oil | Prior-week high/low breakout | 63 | 72.2% | **2.94** |
 
 ---
 
@@ -47,14 +47,20 @@ Switching to market-order entry (breakout bar close) corrected the win rate to a
 
 This kind of audit is rare. Most backtests never catch this class of error.
 
-### 2. Strict IS/OOS Walk-Forward Validation
+### 2. Audited Sharpe Methodology
 
 - **In-sample (IS): 2018–2021** — strategy design and parameter selection only
 - **Out-of-sample (OOS): 2022–2026** — held out completely, never touched during design
+- **All trading days included** — not only days when a signal fired
+- **True equity-curve returns** — percentage returns use current equity rather than a fixed $25,000 denominator
+- **Executable sizing and costs** — integer MES/MCL contracts plus round-turn commissions
+- **Risk-free rate subtracted** — 4.5% annualized hurdle applied to excess returns
+- **Correlated overlap removed** — Primary and Gap signals are not double-counted
+- **Selection bias deflated** — final Sharpe accounts for 44 strategies tested
 
-OOS Sharpe **exceeds** IS Sharpe by 1.34×. This is the opposite of typical overfitting, where OOS performance decays relative to IS.
+These corrections reduced the previously reported OOS Sharpe from **4.85** to the fully audited **2.23**, with a bootstrap 95% confidence interval of **[1.53, 2.89]**.
 
-### 3. 15 Signals Explored — 11 Honestly Rejected
+### 3. 44 Strategies Tested — 39 Honestly Rejected
 
 Every failed experiment is documented with its OOS result and reason for rejection:
 
